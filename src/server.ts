@@ -12,8 +12,6 @@ const isImageURL = require('image-url-validator').default;
 
   // Set the network port
   const port = process.env.PORT || 8082;
-  
-  const apiRoot = '/api'
 
   // Use the body parser middleware for post requests
   app.use(bodyParser.json());
@@ -22,7 +20,6 @@ const isImageURL = require('image-url-validator').default;
   // GET /filteredimage?image_url={{URL}}
   // endpoint to filter an image from a public url.
   // IT SHOULD
-  //    1
   //    1. validate the image_url query
   //    2. call filterImageFromURL(image_url) to filter the image
   //    3. send the resulting file in the response
@@ -38,8 +35,10 @@ const isImageURL = require('image-url-validator').default;
     const img_url = req.query.image_url;
     const files: Array<string> = [];
 
+    //make sure image_url is provided
     if (!img_url){
       res.send("Please input an image url!")
+    //validate image url
     } else if(await isImageURL(img_url)) {
       let filteredimage = await filterImageFromURL(img_url as string);
       files.push(filteredimage);
@@ -47,6 +46,8 @@ const isImageURL = require('image-url-validator').default;
     } else {
       res.send("Not an Image")
     }
+
+    deleteLocalFiles(files);
   })
 
   //! END @TODO1
