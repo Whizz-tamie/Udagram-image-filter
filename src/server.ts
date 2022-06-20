@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import {filterImageFromURL, deleteLocalFiles} from './util/util';
+import { filter } from 'bluebird';
 
 //image validator
 const isImageURL = require('image-url-validator').default;
@@ -34,21 +35,18 @@ const isImageURL = require('image-url-validator').default;
   app.get('/filteredimage', async (req: express.Request, res: express.Response) => {
     const img_url = req.query.image_url;
     const files: Array<string> = [];
-
-    //make sure image_url is provided
-    if (!img_url){
-      res.send("Please input an image url!")
-    //validate image url
-    } else if(await isImageURL(img_url)) {
-      let filteredimage = await filterImageFromURL(img_url as string);
-      files.push(filteredimage);
-      res.sendFile(filteredimage);
+    
+    if (!img_url) {
+      res.send("Image url is required!")
     } else {
-      res.send("Not an Image")
+      if(await isImageURL(img_url)){
+        let filteredImage = await filterImageFromURL(img_url as string);
+        res.sendFile(filteredImage)
+      } else {
+        res.sendStatus(404)
+      }
     }
-
-    deleteLocalFiles(files);
-  })
+  });
 
   //! END @TODO1
   
