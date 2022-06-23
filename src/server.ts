@@ -41,7 +41,10 @@ const isImageURL = require('image-url-validator').default;
     } else {
       if(await isImageURL(img_url)){
         let filteredImage = await filterImageFromURL(img_url as string);
-        res.sendFile(filteredImage)
+        files.push(filteredImage);
+        res.sendFile(filteredImage, {dotfiles: "deny"}, function(err){
+          deleteLocalFiles(files);
+        });
       } else {
         res.sendStatus(404)
       }
