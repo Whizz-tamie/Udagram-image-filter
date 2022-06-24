@@ -2,9 +2,9 @@
   "name": "udagram-image-filter",
   "version": "1.0.0",
   "description": "A Node-Express application which runs a simple script to process images.",
-  "main": "./www/server.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node ./www/server.js",
+    "start": "node server.js",
     "tsc": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rimraf www/ || true",
